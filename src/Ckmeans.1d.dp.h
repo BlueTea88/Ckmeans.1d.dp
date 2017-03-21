@@ -15,41 +15,21 @@
 #include <string>
 
 /* One-dimensional cluster algorithm implemented in C++ */
-/* x is input one-dimensional vector and
- Kmin and Kmax stand for the range for the number of clusters*/
 void kmeans_1d_dp(
-    const double *x, const size_t N, const double * y,
-    size_t Kmin, size_t Kmax,
-    int* cluster, double* centers, double* withinss, int* size);
-
-
-void backtrack(
-    const std::vector<double> & x,
-    const std::vector< std::vector< size_t > > & J,
-    std::vector<size_t> & counts);
-
-size_t select_levels(
-    const std::vector<double> & x,
-    const std::vector< std::vector< size_t > > & J,
-    size_t Kmin, size_t Kmax);
+    const double *x, const size_t N, 
+    const double *z, const size_t M,
+    const double *w,
+    size_t k_in, int* cluster, double* centers, double* size);
 
 void fill_weighted_dp_matrix(
     const std::vector<double> & x,
-    const std::vector<double> & y,
+    const std::vector< std::vector< double > > & z,
+    const std::vector< std::vector< double > > & w,
     std::vector< std::vector< double > > & S,
     std::vector< std::vector< size_t > > & J);
 
 void backtrack_weighted(
-    const std::vector<double> & x, const std::vector<double> & y,
+    const std::vector<double> & x, 
+    const std::vector< std::vector< double > > & w,
     const std::vector< std::vector< size_t > > & J,
-    std::vector<size_t> & counts, std::vector<double> & weights);
-
-void backtrack_weighted(
-    const std::vector<double> & x, const std::vector<double> & y,
-    const std::vector< std::vector< size_t > > & J,
-    int* cluster, double* centers, double* withinss, int* weights);
-
-size_t select_levels_weighted(
-    const std::vector<double> & x, const std::vector<double> & y,
-    const std::vector< std::vector< size_t > > & J,
-    size_t Kmin, size_t Kmax);
+    int* cluster, double* centers, double* weights);
