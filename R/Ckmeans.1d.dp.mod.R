@@ -1,21 +1,33 @@
-##   Ckmeans.1d.dp()-----Interface funcition to call C++ version kmeans.1d.dp()
-##
-##   Haizhou Wang
-##   Computer Science Department
-##   New Mexico State University
-##   hwang@cs.nmsu.edu
-##
-##   Created: Oct 20, 2009
-##
-## Modified:
-#    May 17, 2016. MS
-#    September 25, 2016. MS. Introduced function ahist()
-
-# Ckmeans.1d.dp.mod : function which implement optimal one-dimensional clustering
-#   x is one-dimensional input vector
-#   w list of vectors representing cell weights
-#   z list of vectors used to calculate variance objective (one vector per x value)
-#   k number of clusters
+#' Ckmeans.1d.dp.mod
+#'
+#' Modified one-dimensional K-means function.
+#'
+#' @param x vector of one-dimensional values to cluster
+#' @param w list of vectors representing cell weights (one vector per x value)
+#' @param z list of vectors used to calculate variance objective (one vector per x value)
+#' @param k number of clusters
+#'
+#' @details
+#' Modified function from the Ckmeans.1d.dp R package (attributed to Haizhou Wang and Joe Song).
+#'
+#' Segments the one-dimensional vector x into clusters without breaking the continuity
+#' of x values such that only neighbouring values can be grouped together.
+#'
+#' Each x value has an associate vector of weights and z values which are used in the
+#' calculation of the weighted sum of squares objective.  The clusters are then optimised
+#' by minimising the weighted sum of squares (according to the vector of weights and z)
+#' such that the continuity of x values is preserved.
+#'
+#' @return
+#' A list of results containing:
+#' \itemize{
+#'   \item \code{cluster} optimised cluster indices at varying number of clusters
+#'   \item \code{centers} cluster centers at varying number of clusters
+#'   \item \code{size} the size of each cluster for varying number of clusters change
+#' }
+#'
+#' @useDynLib Ckmeans.1d.dp.mod
+#' @export
 Ckmeans.1d.dp.mod <- function(x, z, w, k=2)
 {
   # Check to see if k is less than 0.
@@ -62,7 +74,7 @@ Ckmeans.1d.dp.mod <- function(x, z, w, k=2)
   for (i in w) w_long <- c(w_long, i)
 
   # Call external C++ function
-  result <- .C("Ckmeans_1d_dp", PACKAGE="Ckmeans.1d.dp.mod",
+  result <- .C("Ckmeans_1d_dp", PACKAGE='Ckmeans.1d.dp.mod',
                x_data=as.double(x), x_length=as.integer(length(x)),
                z_data=as.double(z_long), z_length=as.integer(length(z[[1]])),
                weight=as.double(w_long), k_in=as.integer(k),
@@ -86,4 +98,4 @@ Ckmeans.1d.dp.mod <- function(x, z, w, k=2)
   temp$w <- w
 
   return(temp)
-} ##end of Ckmeans.1d.dp()
+}
